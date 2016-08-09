@@ -1,7 +1,10 @@
 package it.unibz.inf.makerspace;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+
+import purejavacomm.CommPortIdentifier;
 
 public class Application {
 	
@@ -17,19 +20,15 @@ public class Application {
 	}
 	
 	public static void addArduino(String comPort) {
-		arduinos.add(new Arduino(comPort));
+		try {
+			arduinos.add(new Arduino(comPort));
+		} catch(RuntimeException e) {
+			// Do nothing if not an Arduino sketch loaded with firmata. 
+		}
 	}
 	
-	public static Arduino getArduino(String comPort) {
-		Arduino result = null;
-		for(int i = 0; i < arduinos.size(); i++) {
-			Arduino arduino = arduinos.get(i);
-			if(arduino.comPort.equalsIgnoreCase(comPort)) {
-				result = arduino;
-				break;
-			}
-		}
-		return result;
+	public static Arduino[] getArduinos() {
+		return arduinos.toArray(new Arduino[arduinos.size()]);
 	}
 	
 	public static void removeArduino(String comPort) {
@@ -40,5 +39,19 @@ public class Application {
 				arduinos.remove(i);
 			}
 		}
+	}
+	
+	public static String[] getSerialComPorts() {
+		ArrayList<String> serialComPorts = new ArrayList<>();
+		@SuppressWarnings("rawtypes")
+		Enumeration portIds = CommPortIdentifier.getPortIdentifiers();
+		while(portIds.hasMoreElements()) {
+			CommPortIdentifier portId = 
+					(CommPortIdentifier)portIds.nextElement();
+			if(portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+				serialComPorts.add(portId.getName());
+			}
+		}
+		return serialComPorts.toArray(new String[serialComPorts.size()]);
 	}
 }

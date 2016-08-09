@@ -17,7 +17,7 @@ public class Arduino {
 	
 	private MessageListener<Message> messageListener;
 	
-	public Arduino(String comPort) {
+	public Arduino(String comPort) throws RuntimeException {
 		firmata = new Firmata(comPort);
 		firmata.start();
 		this.comPort = comPort;
@@ -61,7 +61,7 @@ public class Arduino {
 	
 	@Override
 	public String toString() {
-		return "Firmata v" + firmataMajorVersion + "." +
+		return "[" + comPort + "] Firmata v" + firmataMajorVersion + "." +
 				firmataMinorVersion + " " + "sketch '" + firmwareName +
 				"' " + "v" + firmwareMajorVersion + "." +
 				firmwareMinorVersion;
