@@ -1,4 +1,6 @@
-package it.unibz.inf.makerspace;
+package it.unibz.inf.makerspace.battleship;
+
+import it.unibz.inf.makerspace.battleship.firmata.Arduino;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -15,7 +17,7 @@ public class Application {
 	}
 	
 	public Application() {
-		GameApplet.main("it.unibz.inf.makerspace.GameApplet");
+		GameApplet.main("it.unibz.inf.makerspace.battleship.GameApplet");
 		arduinos = new ArrayList<>();
 	}
 	

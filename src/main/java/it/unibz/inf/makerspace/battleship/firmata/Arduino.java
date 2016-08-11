@@ -1,10 +1,20 @@
-package it.unibz.inf.makerspace;
+package it.unibz.inf.makerspace.battleship.firmata;
+
+import it.unibz.inf.makerspace.battleship.firmata.GameGrid.Tile.*;
 
 import com.bortbort.arduino.FiloFirmata.Firmata;
 import com.bortbort.arduino.FiloFirmata.MessageListener;
 import com.bortbort.arduino.FiloFirmata.Messages.*;
 
+/**
+ * The Arduino connection via Firmata protocol.
+ * @author Julian
+ */
 public class Arduino {
+	
+	static {
+		Firmata.addCustomSysexParser(new ChangeMessageBuilder());
+	}
 	
 	// https://github.com/reapzor/FiloFirmata
 	public final Firmata firmata;
@@ -26,7 +36,7 @@ public class Arduino {
 				SysexReportFirmwareMessage.class,
 		        new SysexReportFirmwareQueryMessage()
 		);
-		firmwareName = sysexReportFirmwareMessage.getFirmwareName() + ".ino";
+		firmwareName = sysexReportFirmwareMessage.getFirmwareName();
 		firmwareMajorVersion = sysexReportFirmwareMessage.getMajorVersion();
 		firmwareMinorVersion = sysexReportFirmwareMessage.getMinorVersion();
 		ProtocolVersionMessage protocolVersionMessage;
@@ -41,18 +51,26 @@ public class Arduino {
 
 			@Override
 			public void messageReceived(Message message) {
+				// Print debug messages from the Arduino to the console.
 				if(message instanceof SysexStringDataMessage) {
 					// Print out Firmata.sendString()
 					SysexStringDataMessage m = (SysexStringDataMessage)message;
 					System.out.println(
 							"[" + firmwareName + "] " + m.getStringData()
 					);
+				} else if(message instanceof ChangeMessage) {
+					// FIXME: Use this received message in the game logic.
+					ChangeMessage m = (ChangeMessage) message;
+					System.out.println(
+							"[" + firmwareName + "] row=" + m.getRow() +
+							", column=" + m.getColumn());
 				}
 			}
 		};
 		firmata.addMessageListener(
 				SysexStringDataMessage.class, messageListener
 		);
+		firmata.addMessageListener(ChangeMessage.class, messageListener);
 	}
 	
 	public void stop() {
