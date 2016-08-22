@@ -44,12 +44,13 @@ class Field
 	{
 		boolean killedx = true, killedy = true; 
 		int ship;
-		if(player.equals("A"))
+		if(player.equals("B"))
 		{
 			if(fieldA[x][y]==0)
-				return -1;
+				return 0;
 			
 			ship = fieldA[x][y];
+			fieldA[x][y]=0;
 
 			for(int i=0;i<fieldA.length;i++)
 				if(fieldA[i][y] == ship)
@@ -60,24 +61,28 @@ class Field
 					killedy = false;
 		}
 		else
-		{
-			if(fieldB[x][y]==0)
+			if(player.equals("A"))
+			{
+				if(fieldB[x][y]==0)
+					return 0;
+			
+				ship = fieldB[x][y];
+				fieldB[x][y]=0;
+				
+				for(int i=0;i<fieldB.length;i++)
+					if(fieldB[i][y] == ship)
+						killedx = false;
+			
+				for(int i=0;i<fieldB[x].length;i++)
+					if(fieldB[x][i] == ship)
+						killedy = false;
+			}
+			else
 				return -1;
-			
-			ship = fieldB[x][y];
-			
-			for(int i=0;i<fieldB.length;i++)
-				if(fieldB[i][y] == ship)
-					killedx = false;
-			
-			for(int i=0;i<fieldB[x].length;i++)
-				if(fieldB[x][i] == ship)
-					killedy = false;
-		}
 		
 		if(killedx && killedy)
-			return 1;
+			return 2;
 		else
-			return 0;
+			return 1;
 	}
 }
