@@ -1,6 +1,7 @@
 package it.unibz.inf.makerspace.battleship.Graphic;
 
 import java.awt.*;
+import java.awt.ActionListener;
 import javax.swing.*;
 import it.unibz.inf.makerspace.battleship.Field.*;
 
@@ -18,7 +19,9 @@ public class Graphic extends JPanel
 		player = p;
 		field = new Field();
 		startFinish = new JButton("Start Game");
-		notification = new JPanel("Set the ships and click \"Start Game\"");
+		JLabel labelNotification = new JLabel("Set the ships and click \"Start Game\"");
+		notification = new JPanel();
+		notification.add(labelNotification);
 		back = new JPanel();
 		options = new JPanel();
 		background = new JPanel();
@@ -47,43 +50,43 @@ public class Graphic extends JPanel
 		{
 			for(int i=startY;i<finishY+1;i++)
 				boxes[startX][i].setBackground(Color.GREEN);
-			notification.setText("");
+			labelNotification.setText("");
 		}
 		else
 			if(startY == finishY)
 			{
 				for(int i=startX;i<finishX+1;i++)
 					boxes[i][finishY].setBackground(Color.GREEN);
-				notification.setText("");
+				labelNotification.setText("");
 			}
 			else
-				notification.setText("Only horizontal or vertical ships are allowed!");
+				labelNotification.setText("Only horizontal or vertical ships are allowed!");
 		field.setShip(player,startX,startY,finishX,finishY);
 	}
 	
-	public int attack(int X, int Y)
+	public void attack(int X, int Y)
 	{
 		int result = field.attack(player, X, Y);
 		if(result == 0)
 		{
-			notification.setText("Missed!");
+			labelNotification.setText("Missed!");
 			return;
 		}
 		if(result == 1)
 		{
-			notification.setText("You are getting on the correct way!");
+			labelNotification.setText("You are getting on the correct way!");
 			boxes[X][Y].setBackground(Color.RED);
 			return;
 		}
 		if(result == 2)
 		{
-			notification.setText("You have destroyed an enemy's ship!");
+			labelNotification.setText("You have destroyed an enemy's ship!");
 			boxes[X][Y].setBackground(Color.RED);
 			return;
 		}
 		if(result == -1)
 		{
-			notification.setText("Something went wrong, try again");
+			labelNotification.setText("Something went wrong, try again");
 			return;
 		}
 	}
@@ -102,6 +105,9 @@ private class ButtonListener implements ActionListener
 		}	
 		else
 			if(e.getSource().getText().equals("Surrender"))
-				// do something that has to be decided
+			{
+				labelNotification.setText("You have decided to surrender, you loose");
+				//send message to the opponent that the player has just surrended
+			}
 	}
 }

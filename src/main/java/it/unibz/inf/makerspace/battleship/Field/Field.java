@@ -2,7 +2,7 @@ package it.unibz.inf.makerspace.battleship.Field;
 
 import java.util.Arrays;
 
-class Field
+public class Field
 {
 	//To each ship is assigned a number, so that it is possible to identify it
 	private int[][] fieldA, fieldB;
