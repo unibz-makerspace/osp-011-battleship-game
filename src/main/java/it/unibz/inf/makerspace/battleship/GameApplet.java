@@ -25,7 +25,7 @@ public class GameApplet extends PApplet {
 	@Override
 	public void setup() {
 		surface.setResizable(true);
-		
+		/*
 		// Try to connect to an Arduino on each available serial port.
 		// TODO: Probably this should be done in a seperate thread.
 		comPorts = Application.getSerialComPorts();
@@ -44,14 +44,14 @@ public class GameApplet extends PApplet {
 		for(Arduino arduino : arduinos) {
 			println(arduino);
 		}
-		
+		*/
 		tSecond = second();
 	}
 	
 	@Override
 	public void draw() {
 		// TODO: Update Game UI.
-		
+		/*
 		// FIXME: Transmit real game events to the Arduino from within the game
 		// logic.
 		final int tCurrentSecond = second();
@@ -73,5 +73,6 @@ public class GameApplet extends PApplet {
 			}
 			tSecond = tCurrentSecond;
 		}
+		*/
 	}
 }

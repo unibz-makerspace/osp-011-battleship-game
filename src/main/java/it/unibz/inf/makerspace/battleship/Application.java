@@ -19,6 +19,7 @@ public class Application {
 	public Application() {
 		GameApplet.main("it.unibz.inf.makerspace.battleship.GameApplet");
 		arduinos = new ArrayList<>();
+		setup();
 	}
 	
 	public static void addArduino(String comPort) {
@@ -55,5 +56,29 @@ public class Application {
 			}
 		}
 		return serialComPorts.toArray(new String[serialComPorts.size()]);
+	}
+	
+	private String[] comPorts;
+	private Arduino[] comPortsArduinos;
+	
+	public void setup() {
+		// Try to connect to an Arduino on each available serial port.
+		// TODO: Probably this should be done in a seperate thread.
+		comPorts = Application.getSerialComPorts();
+		if(comPorts.length != 0) {
+			for(int i = 0; i < comPorts.length; i++) {
+				Application.addArduino(comPorts[i]);
+			}
+		}
+		
+		// TODO: Populate a Arduino ComPort list in the UI. This should happen
+		// as soon all Arduino have been detected.
+		// FIXME: Assign the Arduinos for the Laser grid and the RGB LED grid to
+		// two different kind of variables. The Arduinos can be distinguished by
+		// the firmwareName field of the firmata member of the arduino instance.
+		comPortsArduinos = Application.getArduinos();
+		for(Arduino arduino : comPortsArduinos) {
+			System.out.println(arduino);
+		}
 	}
 }
