@@ -1,8 +1,10 @@
 package it.unibz.inf.makerspace.battleship.Graphic;
 
 import java.awt.*;
-import java.awt.ActionListener;
+import java.awt.event.ActionEvent;
+
 import javax.swing.*;
+
 import it.unibz.inf.makerspace.battleship.Field.*;
 
 public class Graphic extends JPanel
@@ -13,13 +15,14 @@ public class Graphic extends JPanel
 	JButton startFinish;
 	JFrame frame = new JFrame("Awesome Battleship Game");
 	String player;
+	JLabel labelNotification;
 
 	public void initialize(String p)
 	{
 		player = p;
 		field = new Field();
 		startFinish = new JButton("Start Game");
-		JLabel labelNotification = new JLabel("Set the ships and click \"Start Game\"");
+		labelNotification = new JLabel("Set the ships and click \"Start Game\"");
 		notification = new JPanel();
 		notification.add(labelNotification);
 		back = new JPanel();
@@ -35,10 +38,10 @@ public class Graphic extends JPanel
 				background.add(boxes[i][j]);
 			}
 		
-		options.setLayout(new BoxLayout(1,2));
+		options.setLayout(new GridLayout(1,2));
 		options.add(notification);
 		options.add(startFinish);
-		back.setLayout(new BoxLayout(2,1));
+		back.setLayout(new GridLayout(2,1));
 		back.add(options);
 		back.add(background);
 		frame.add(back);
@@ -90,24 +93,27 @@ public class Graphic extends JPanel
 			return;
 		}
 	}
-}
-
-private class ButtonListener implements ActionListener
-{
-	public void actionPerformed(ActionEvent e)
+	private class ButtonListener implements java.awt.event.ActionListener
 	{
-		if(e.getSource().getText().equals("Start Game"))
+		@Override
+		public void actionPerformed(ActionEvent e)
 		{
-			for(int i=0;i<8;i++)
-				for(int j=0;j<8;j++)
-					boxes[i][j].setBackground(Color.BLUE);
-			e.getSource().setText("Surrend");
-		}	
-		else
-			if(e.getSource().getText().equals("Surrender"))
+			JLabel source = (JLabel) e.getSource();
+			if(source.getText().equals("Start Game"))
 			{
-				labelNotification.setText("You have decided to surrender, you loose");
-				//send message to the opponent that the player has just surrended
+				for(int i=0;i<8;i++)
+					for(int j=0;j<8;j++)
+						boxes[i][j].setBackground(Color.BLUE);
+				source.setText("Surrend");
+			}	
+			else 
+			{
+				if(source.getText().equals("Surrender"))
+				{
+					labelNotification.setText("You have decided to surrender, you loose");
+					//send message to the opponent that the player has just surrended
+				}
 			}
+		}
 	}
 }
