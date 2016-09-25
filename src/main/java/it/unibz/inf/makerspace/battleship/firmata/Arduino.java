@@ -1,5 +1,6 @@
 package it.unibz.inf.makerspace.battleship.firmata;
 
+import static it.unibz.inf.makerspace.battleship.firmata.ArrangeGrid.*;
 import it.unibz.inf.makerspace.battleship.firmata.GameGrid.Tile.*;
 
 import com.bortbort.arduino.FiloFirmata.Firmata;
@@ -14,6 +15,8 @@ public class Arduino {
 	
 	static {
 		Firmata.addCustomSysexParser(new ChangeMessageBuilder());
+		Firmata.addCustomSysexParser(new RowChangeMessageBuilder());
+		Firmata.addCustomSysexParser(new ColumnChangeMessageBuilder());
 	}
 	
 	// https://github.com/reapzor/FiloFirmata
@@ -64,6 +67,16 @@ public class Arduino {
 					System.out.println(
 							"[" + firmwareName + "] row=" + m.getRow() +
 							", column=" + m.getColumn());
+				} else if(message instanceof RowChangeMessage) {
+					// FIXME: Use this received message in the game logic.
+					RowChangeMessage m = (RowChangeMessage) message;
+					System.out.println(
+							"[" + firmwareName + "]    row=" + m.getRow());
+				} else if(message instanceof ColumnChangeMessage) {
+					// FIXME: Use this received message in the game logic.
+					ColumnChangeMessage m = (ColumnChangeMessage) message;
+					System.out.println(
+							"[" + firmwareName + "] column=" + m.getColumn());
 				}
 			}
 		};
