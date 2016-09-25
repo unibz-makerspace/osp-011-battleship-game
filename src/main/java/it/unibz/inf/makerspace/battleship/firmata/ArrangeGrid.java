@@ -33,7 +33,7 @@ public class ArrangeGrid {
 
 		@Override
 		public Message buildMessage(byte[] messageBody) {
-			if(messageBody.length >= 2) {
+			if(messageBody.length >= 1) {
 				byte row = messageBody[0];
 				return new RowChangeMessage(row);
 			}

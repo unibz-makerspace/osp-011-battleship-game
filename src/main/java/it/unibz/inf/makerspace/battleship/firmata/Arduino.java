@@ -84,6 +84,8 @@ public class Arduino {
 				SysexStringDataMessage.class, messageListener
 		);
 		firmata.addMessageListener(ChangeMessage.class, messageListener);
+		firmata.addMessageListener(RowChangeMessage.class, messageListener);
+		firmata.addMessageListener(ColumnChangeMessage.class, messageListener);
 	}
 	
 	public void stop() {
