@@ -33,18 +33,22 @@ public class GameGrid {
 		 */
 		public enum Type {
 			/**
-			 * A tile with no ship on it or a not revealed tile.
+			 * A not revealed tile.
 			 */
-			WATER     (0x00),
+			NONE      (0x00),
+			/**
+			 * A tile with no ship on it.
+			 */
+			WATER     (0x01),
 			/**
 			 * A tile with a ship on it that has been hit.
 			 */
-			HIT       (0x01),
+			HIT       (0x02),
 			/**
 			 * A tile with a ship on it that has been destroyed (All tiles of
 			 * the ship has been hit).
 			 */
-			DESTROYED (0x02);
+			DESTROYED (0x03);
 			
 			public final byte item;
 			
