@@ -2,8 +2,11 @@ package it.unibz.inf.makerspace.battleship;
 
 import it.unibz.inf.makerspace.battleship.firmata.ArrangeGridArduino;
 import it.unibz.inf.makerspace.battleship.firmata.AttackGridArduino;
+import it.unibz.inf.makerspace.battleship.firmata.GameGrid;
+import it.unibz.inf.makerspace.battleship.game.GameStats;
 import it.unibz.inf.makerspace.battleship.game.OnArrangeTileSetListener;
 import it.unibz.inf.makerspace.battleship.game.OnAttackTileSetListener;
+import it.unibz.inf.makerspace.battleship.game.PlayerInfo;
 import it.unibz.inf.makerspace.battleship.game.Ship;
 
 import java.applet.Applet;
@@ -27,7 +30,8 @@ public class GamePanel extends JPanel
 		MouseListener {
 	
 	public enum TileState {
-		WATER(Color.CYAN),
+		NONE(Color.CYAN),
+		WATER(Color.blue),
 		PLACEMENT(Color.GRAY), // Special case, not visible to attack grid.
 		SHIP(Color.BLACK),     // Special case, not visible to attack grid.
 		HIT(Color.YELLOW),
@@ -67,9 +71,14 @@ public class GamePanel extends JPanel
 	
 	private String[] shipBuilderStatus;
 	
+	private final PlayerInfo playerInfo;
+	
+	private final AttackGridArduino attackGridArduino;
+	
 	public GamePanel(
 			ArrangeGridArduino arrangeGridArduino,
-			AttackGridArduino attackGridArduino) {
+			AttackGridArduino attackGridArduino, PlayerInfo playerInfo) {
+		this.playerInfo = playerInfo;
 		shipBuilderStatus = new String[Ship.MAX_BATTLESHIPS +
 		                               Ship.MAX_DESTROYERS + 1];
 		for (int i = 0; i < shipBuilderStatus.length; i++) {
@@ -100,7 +109,7 @@ public class GamePanel extends JPanel
 					tile.setHorizontalAlignment(JTextField.CENTER);
 					add(tile);
 					tiles[row][column] = tile;
-					tile.setBackground(TileState.WATER.color);
+					tile.setBackground(TileState.NONE.color);
 				} else if (column == MAX_COLUMNS) {
 					if (row != MAX_ROWS) {
 						JTextField rowLabel = new JTextField(getRowLabel(row));
@@ -127,6 +136,9 @@ public class GamePanel extends JPanel
 		arrangeGridArduino.setOnArrangeTileSetListener(this);
 		status.setText(shipBuilderStatus[ships.size()]);
 		Ship.resetShipCount();
+		attackGridArduino.resetGrid();
+		attackGridArduino.setOnAttackTileSetListener(this);
+		this.attackGridArduino = attackGridArduino;
 	}
 	
 	private String getRowLabel(int row) {
@@ -225,6 +237,8 @@ public class GamePanel extends JPanel
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		// TODO: change save game logic
+		GameStats.saveGameStatsInfo(new GameStats.Info(playerInfo));
 		if (!isShipPlacementEnabled && !areAllShipsPlaced) {
 			isShipPlacementEnabled = true;
 			if (Application.DEBUG_ENABLED) {
@@ -265,5 +279,7 @@ public class GamePanel extends JPanel
 	@Override
 	public void onAttackTileSet(int row, int column) {
 		// TODO Auto-generated method stub
+		//attackGridArduino.setTile(row, column, GameGrid.Tile.Type.NONE);
+		//System.out.println("Implement Attack");
 	}
 }

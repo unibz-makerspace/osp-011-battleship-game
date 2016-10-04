@@ -3,6 +3,7 @@ package it.unibz.inf.makerspace.battleship;
 import it.unibz.inf.makerspace.battleship.firmata.Arduino;
 import it.unibz.inf.makerspace.battleship.firmata.ArrangeGridArduino;
 import it.unibz.inf.makerspace.battleship.firmata.AttackGridArduino;
+import it.unibz.inf.makerspace.battleship.game.PlayerInfo;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -98,11 +99,28 @@ public class Application extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO: add replace logic for new game
-			gamePanel.add(new GamePanel(arrangeGridArduino, attackGridArduino));
+			PlayerInfo playerInfo = getPlayerDialog();
+			gamePanel.removeAll();
+			gamePanel.add(new GamePanel(
+					arrangeGridArduino, attackGridArduino, playerInfo
+			));
 			gamePanel.revalidate();
 		}
 		
+	}
+	
+	static PlayerInfo getPlayerDialog() {
+		JTextField user = new JTextField();
+		JTextField email = new JTextField();
+		final JComponent[] inputs = new JComponent[] {
+				new JLabel("Username:"),
+				user,
+				new JLabel("Email:"),
+				email
+		};
+		JOptionPane.showMessageDialog(null, inputs, "Player Info",
+				JOptionPane.PLAIN_MESSAGE);
+		return new PlayerInfo(user.getText(), email.getText());
 	}
 	
 	private static JFrame statistics = new JFrame("Statistics");
