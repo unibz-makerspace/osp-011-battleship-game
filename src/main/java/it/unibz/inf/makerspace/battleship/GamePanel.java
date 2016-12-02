@@ -275,11 +275,45 @@ public class GamePanel extends JPanel
 			tiles[row][column].setBackground(tileState.color);
 		}
 	}
+	
+	private void drawShipPoint(Point shipPoint, TileState tileState) {
+		int row = shipPoint.x;
+		int column = shipPoint.y;
+		tiles[row][column].setBackground(tileState.color);
+	}
 
 	@Override
 	public void onAttackTileSet(int row, int column) {
-		// TODO Auto-generated method stub
-		//attackGridArduino.setTile(row, column, GameGrid.Tile.Type.NONE);
-		//System.out.println("Implement Attack");
+		// TODO: enable listener when ships are placed.
+		if (!areAllShipsPlaced) {
+			return;
+		}
+		final Point p = new Point(row, column);
+		boolean shipHit = false;
+		for(Ship ship : ships) {
+			if (ship.belongsPointToShip(p)) {
+				shipHit = true;
+				ship.hitShip(p);
+				if (ship.getHitsLeft() > 0) {
+					attackGridArduino
+						.setTile(row, column, GameGrid.Tile.Type.HIT);
+					drawShipPoint(p, TileState.HIT);
+					playShipSound(ShipSound.HIT);
+				} else {
+					for(Point point : ship.getShipPoints()) {
+						attackGridArduino
+							.setTile(point.x, point.y,
+									GameGrid.Tile.Type.DESTROYED);
+						drawShipPoint(p, TileState.DESTROYED);
+					}
+					playShipSound(ShipSound.DESTROYED);
+				}
+			}
+		}
+		if (!shipHit) {
+			attackGridArduino.setTile(row, column, GameGrid.Tile.Type.WATER);
+			drawShipPoint(p, TileState.WATER);
+			playShipSound(ShipSound.MISSED);
+		}
 	}
 }

@@ -85,7 +85,7 @@ public class Ship {
 		}
 	}
 	
-	private boolean belongsPointToShip(Point p) {
+	public boolean belongsPointToShip(Point p) {
 		boolean result = false;
 		for (Point point : points) {
 			if (point.equals(p)) {
